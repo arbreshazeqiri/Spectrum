@@ -12,9 +12,13 @@ export const fetchSpectrumStatus = async () => {
   }
 };
 
-export const actOnSpectrum = async () => {
+interface ActionRequestBody {
+  actionType: string;
+}
+
+export const actOnSpectrum = async (body: ActionRequestBody) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/ActOnSpectrum`);
+    const response = await axios.post(`${API_BASE_URL}/ActOnSpectrum`, body);
     return response.data;
   } catch (error) {
     console.error('Error performing action:', error);

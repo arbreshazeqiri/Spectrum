@@ -11,7 +11,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({ value }) => {
     <Flex flexDir="column" bg="#31363C" height="100%" justifyContent="center" alignItems="center">
       <SolidGauge value={value} />
       <Text color="white" fontFamily={'Conthrax'} fontSize={50}>
-        {value.toFixed(2)}°C
+        {value?.toFixed(2)}°C
       </Text>
     </Flex>
   );

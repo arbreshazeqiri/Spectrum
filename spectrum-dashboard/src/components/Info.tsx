@@ -36,7 +36,7 @@ const Info: React.FC<InfoProps> = ({ isLive, status, isAscending, setIsLive, fet
         fontFamily={'Conthrax'}
         height="50px"
       >
-        {isAscending ? 'Ascending' : 'Propellant loading'}
+        {isAscending ? 'Ascending' : 'Descending'}
       </Flex>
       <Flex color="white" bg="#31363C">
         <VideoPlayer key={isAscending ? 'ascending' : 'notAscending'} src={isAscending === true ? '/ascending.mp4' : '/notAscending.mp4'} />
