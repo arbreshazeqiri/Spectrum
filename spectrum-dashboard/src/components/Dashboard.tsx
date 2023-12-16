@@ -4,6 +4,7 @@ import { Flex, IconButton, useToast } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
 import LiveStatus from './LiveStatus';
 import GaugeChart from './charts/GaugeChart';
+import VideoPlayer from './VideoPlayer';
 
 interface SensorData {
   velocity: number;
@@ -30,7 +31,6 @@ const Dashboard: React.FC = () => {
   const fetchData = useCallback(async () => {
     try {
       const data = await fetchSpectrumStatus();
-      console.log(data);
       setSensorData(data);
     } catch (error) {
       toast({
@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
     <Flex flexDir="column" justifyContent="center" alignItems="center" width="100%" height="100%">
       <LiveStatus />
       <Flex flexDir="row" justifyContent="space-between" width="100%" height="100%" padding={5} bg="#343B41" gap={4}>
-      <Flex flexDir="column" width="40%">
+      <Flex flexDir="column" width="35%">
       <Flex flexDir="column" height="300px">
           <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">Altitude</Flex>
         <Flex color="white" bg="#31363C" height="70%" padding={5}>{sensorData.altitude}</Flex>
@@ -73,21 +73,23 @@ const Dashboard: React.FC = () => {
         <Flex color="white" bg="#31363C" height="70%" padding={5}>{sensorData.velocity}</Flex>
         </Flex>
         </Flex>
-        <Flex flexDir="column" width="40%">
-        <Flex flexDir="column" height="300px">
+        <Flex flexDir="column" width="35%">
+        <Flex flexDir="column" height="560px">
           <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">Temperature</Flex>
           <GaugeChart value={sensorData.temperature}/>
         </Flex>
-        <Flex flexDir="column" height="300px">
-          <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">Ascending</Flex>
-        <Flex color="white" bg="#31363C" height="70%" padding={5}>{sensorData.isAscending? 'Yes': 'No'}</Flex>
         </Flex>
-        </Flex>
-      <Flex flexDir="column" width="20%" gap={4}>
+      <Flex flexDir="column" width="30%" gap={4}>
       <IconButton bg="#095EDD" color="white" aria-label='Refresh' icon={<RepeatIcon />} alignSelf="end" onClick={fetchData}/>
-        <Flex flexDir="column" minHeight="200px">
+        <Flex flexDir="column" minHeight="193px">
           <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">Status</Flex>
-        <Flex color="white" bg="#31363C" height="70%" padding={5}>{sensorData.statusMessage}</Flex>
+        <Flex color="white" bg="#31363C" height="70%" padding={5} textAlign={'center'}>{sensorData.statusMessage}</Flex>
+        </Flex>
+        <Flex flexDir="column" minHeight="200px">
+          <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">{sensorData.isAscending ? 'Ascending' : 'Propellant loading'}</Flex>
+        <Flex color="white" bg="#31363C">
+        <VideoPlayer key={sensorData.isAscending ? 'ascending' : 'notAscending'} src={sensorData.isAscending === true ? '/ascending.mp4': '/notAscending.mp4'}/>
+        </Flex>
         </Flex>
         </Flex>
       </Flex>

@@ -1,18 +1,14 @@
 import SolidGauge from "./SolidGauge";
-import { Box } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 
 const GaugeChart = ({ value }: { value: number }) => {  
   return (
-    <Box
-      w={{ base: '90%', lg: '100%' }}
-      ml={'30px'}
-      alignSelf={'center'}
-      mb={['110px', '100px', '90px', '120px', 20]}
-    >
+    <Flex flexDir="column" bg="#31363C" height="100%" justifyContent="center" alignItems="center">
       <SolidGauge
         value={value}
       />
-    </Box>
+      <Text color="white" fontFamily={'Conthrax'} fontSize={50}>{value.toFixed(2)}°C</Text>
+    </Flex>
   );
 };
 

@@ -12,7 +12,7 @@ const END_ANGLE = 270
 export function SolidGauge(props: SolidGaugeProps) {
   const { value } = props
   const gauge = useGauge({
-    domain: [0, value >= 100 ? value : value < 0 ? 0.001 : 100],
+    domain: [-30, 30],
     startAngle: START_ANGLE,
     endAngle: END_ANGLE,
     numTicks: 21,
@@ -25,41 +25,28 @@ export function SolidGauge(props: SolidGaugeProps) {
     tipRadius: 2,
   })
 
-  const valueColors =
-    value === 0 && value < 10
-      ? '#F93C00'
-      : value < 20
-      ? '#F95200'
-      : value < 30
-      ? '#F96800'
-      : value < 40
-      ? '#F97E00'
-      : value < 50
-      ? '#F99500'
-      : value < 60
-      ? '#BAD226'
-      : value < 70
-      ? '#8FAF4C'
-      : value < 80
-      ? '#84BC72'
-      : value < 90
-      ? '#5DC998'
-      : value <= 100
-      ? '#35D6C0'
-      : '#35D6C0'
-
+  const blues = [
+    '#6BAED6', '#4292C6', '#2171B5', '#08519C', '#08306B'
+  ];
+  
+  const reds = [
+    '#FB6A4A', '#EF3B2C', '#CB181D', '#A50F15', '#67000D'
+  ];
+  
+  const valueColors = value < 0
+    ? blues[Math.floor(Math.abs(value) / 6)]
+    : value === 0 ? 'white'
+    : reds[Math.floor(value / 6)];
+    
   const baseCx = isNaN(needle?.base?.cx) ? 0 : needle.base.cx
   const baseCy = isNaN(needle?.base?.cy) ? 0 : needle.base.cy
   const tipCx = isNaN(needle?.tip?.cx) ? 0 : needle.tip.cx
   const tipCy = isNaN(needle?.tip?.cy) ? 0 : needle.tip.cy
   return (
-    <Box
-      w={['60%', '60%', '55%', '55%', '90%']}
-      ml={['25%', '25%', '27%', '25%', '12%']}
-    >
+    <Box width="80%">
       <svg
         style={{
-          width: '80%',
+          width: '100%',
           height: '100%',
           overflow: 'visible',
           padding: 4,
@@ -112,20 +99,7 @@ export function SolidGauge(props: SolidGaugeProps) {
             y1={baseCy}
             y2={tipCy}
           />
-          <circle fill="white" {...needle?.base} r={73} />
-          <text
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize={40}
-            fontWeight="bold"
-            fill={'#2C88FD'}
-            z={100}
-            y={35}
-          >
-            {isNaN(value)
-              ? 0
-              : value}
-          </text>
+          <circle fill="#31363C" {...needle?.base} r={73} />
         </g>
       </svg>
     </Box>
