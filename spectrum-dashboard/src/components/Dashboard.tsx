@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { fetchSpectrumStatus } from '../api/sensors';
-import { Flex, IconButton, useToast } from '@chakra-ui/react';
-import { RepeatIcon } from '@chakra-ui/icons';
+import React,{useState,useEffect,useCallback} from 'react';
+import {useToast,Flex} from '@chakra-ui/react';
 import LiveStatus from './LiveStatus';
-import GaugeChart from './charts/GaugeChart';
-import VideoPlayer from './VideoPlayer';
+import {fetchSpectrumStatus} from '../api/sensors';
+import Info from './Info';
+import Stats from './Stats';
+import Temperature from './Temperature';
 
+interface Data {
+  value: number;
+  timestamp: string;
+}
 interface SensorData {
   velocity: number;
   altitude: number;
@@ -15,7 +19,7 @@ interface SensorData {
   isActionRequired: boolean;
 }
 
-const initialSensorData: SensorData = {
+const initialSensorData: SensorData={
   velocity: 0,
   altitude: 0,
   temperature: 0,
@@ -24,31 +28,42 @@ const initialSensorData: SensorData = {
   isActionRequired: false,
 };
 
-const Dashboard: React.FC = () => {
-  const toast = useToast();
-  const [sensorData, setSensorData] = useState<SensorData>(initialSensorData);
+const Dashboard: React.FC=() => {
+  const toast=useToast();
+  const [sensorData,setSensorData]=useState(initialSensorData);
+  const [altitudeData,setAltitudeData]=useState<Data[]>([]);
+  const [velocityData,setVelocityData]=useState<Data[]>([]);
+  const [isLive,setIsLive]=useState(false);
 
-  const fetchData = useCallback(async () => {
+  const fetchData=useCallback(async () => {
     try {
-      const data = await fetchSpectrumStatus();
+      const data=await fetchSpectrumStatus();
       setSensorData(data);
-    } catch (error) {
+      setAltitudeData((prevData) => [
+        ...prevData.slice(Math.max(prevData.length-19,0)),
+        {value: data.altitude,timestamp: new Date().toLocaleTimeString()},
+      ]);
+      setVelocityData((prevData) => [
+        ...prevData.slice(Math.max(prevData.length-19,0)),
+        {value: data.velocity,timestamp: new Date().toLocaleTimeString()},
+      ]);
+    } catch(error) {
       toast({
-        title: error + '',
+        title: error+'',
         status: 'error',
         duration: 9000,
         isClosable: true,
       });
     }
-  }, [toast]);
+  },[toast]);
 
   useEffect(() => {
-    const fetchDataAndHandleErrors = async () => {
+    const fetchDataAndHandleErrors=async () => {
       try {
         await fetchData();
-      } catch (error) {
+      } catch(error) {
         toast({
-          title: error + '',
+          title: error+'',
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -57,41 +72,18 @@ const Dashboard: React.FC = () => {
     };
 
     fetchDataAndHandleErrors();
-  }, [fetchData, toast]);
+  },[fetchData,toast]);
 
   return (
     <Flex flexDir="column" justifyContent="center" alignItems="center" width="100%" height="100%">
-      <LiveStatus />
+      <LiveStatus isLive={isLive} />
       <Flex flexDir="row" justifyContent="space-between" width="100%" height="100%" padding={5} bg="#343B41" gap={4}>
-      <Flex flexDir="column" width="35%">
-      <Flex flexDir="column" height="300px">
-          <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">Altitude</Flex>
-        <Flex color="white" bg="#31363C" height="70%" padding={5}>{sensorData.altitude}</Flex>
+        <Flex flexDir="column" width="35%" gap={4}>
+          <Stats data={altitudeData} color="yellow" />
+          <Stats data={velocityData} color="#E29BFF" />
         </Flex>
-        <Flex flexDir="column" height="300px">
-          <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">Velocity</Flex>
-        <Flex color="white" bg="#31363C" height="70%" padding={5}>{sensorData.velocity}</Flex>
-        </Flex>
-        </Flex>
-        <Flex flexDir="column" width="35%">
-        <Flex flexDir="column" height="560px">
-          <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">Temperature</Flex>
-          <GaugeChart value={sensorData.temperature}/>
-        </Flex>
-        </Flex>
-      <Flex flexDir="column" width="30%" gap={4}>
-      <IconButton bg="#095EDD" color="white" aria-label='Refresh' icon={<RepeatIcon />} alignSelf="end" onClick={fetchData}/>
-        <Flex flexDir="column" minHeight="193px">
-          <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">Status</Flex>
-        <Flex color="white" bg="#31363C" height="70%" padding={5} textAlign={'center'}>{sensorData.statusMessage}</Flex>
-        </Flex>
-        <Flex flexDir="column" minHeight="200px">
-          <Flex bg="#2B3034" justifyContent={'center'} alignItems='center' color="white" fontFamily={'Conthrax'} height="50px">{sensorData.isAscending ? 'Ascending' : 'Propellant loading'}</Flex>
-        <Flex color="white" bg="#31363C">
-        <VideoPlayer key={sensorData.isAscending ? 'ascending' : 'notAscending'} src={sensorData.isAscending === true ? '/ascending.mp4': '/notAscending.mp4'}/>
-        </Flex>
-        </Flex>
-        </Flex>
+        <Temperature temperature={sensorData.temperature} />
+        <Info isLive={isLive} setIsLive={() => setIsLive(!isLive)} status={sensorData.statusMessage} isAscending={sensorData.isAscending} fetchData={fetchData} />
       </Flex>
     </Flex>
   );

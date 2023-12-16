@@ -1,47 +1,44 @@
-import { Box } from '@chakra-ui/react'
-import React from 'react'
-import { useGauge } from 'use-gauge'
+import React from 'react';
+import { Box } from '@chakra-ui/react';
+import { useGauge } from 'use-gauge';
 
 interface SolidGaugeProps {
-  value: number
+  value: number;
 }
 
-const START_ANGLE = 90
-const END_ANGLE = 270
+const START_ANGLE = 90;
+const END_ANGLE = 270;
 
-export function SolidGauge(props: SolidGaugeProps) {
-  const { value } = props
+const SolidGauge: React.FC<SolidGaugeProps> = ({ value }) => {
   const gauge = useGauge({
     domain: [-30, 30],
     startAngle: START_ANGLE,
     endAngle: END_ANGLE,
     numTicks: 21,
     diameter: 250,
-  })
+  });
 
   const needle = gauge.getNeedleProps({
     value,
     baseRadius: 12,
     tipRadius: 2,
-  })
+  });
 
-  const blues = [
-    '#6BAED6', '#4292C6', '#2171B5', '#08519C', '#08306B'
-  ];
-  
-  const reds = [
-    '#FB6A4A', '#EF3B2C', '#CB181D', '#A50F15', '#67000D'
-  ];
-  
-  const valueColors = value < 0
-    ? blues[Math.floor(Math.abs(value) / 6)]
-    : value === 0 ? 'white'
-    : reds[Math.floor(value / 6)];
-    
-  const baseCx = isNaN(needle?.base?.cx) ? 0 : needle.base.cx
-  const baseCy = isNaN(needle?.base?.cy) ? 0 : needle.base.cy
-  const tipCx = isNaN(needle?.tip?.cx) ? 0 : needle.tip.cx
-  const tipCy = isNaN(needle?.tip?.cy) ? 0 : needle.tip.cy
+  const blues = ['#6BAED6', '#4292C6', '#2171B5', '#08519C', '#08306B'];
+  const reds = ['#FB6A4A', '#EF3B2C', '#CB181D', '#A50F15', '#67000D'];
+
+  const valueColors =
+    value < 0
+      ? blues[Math.floor(Math.abs(value) / 6)]
+      : value === 0
+      ? 'white'
+      : reds[Math.floor(value / 6)];
+
+  const baseCx = isNaN(needle?.base?.cx) ? 0 : needle.base.cx;
+  const baseCy = isNaN(needle?.base?.cy) ? 0 : needle.base.cy;
+  const tipCx = isNaN(needle?.tip?.cx) ? 0 : needle.tip.cx;
+  const tipCy = isNaN(needle?.tip?.cy) ? 0 : needle.tip.cy;
+
   return (
     <Box width="80%">
       <svg
@@ -103,7 +100,7 @@ export function SolidGauge(props: SolidGaugeProps) {
         </g>
       </svg>
     </Box>
-  )
-}
+  );
+};
 
-export default SolidGauge
+export default SolidGauge;
