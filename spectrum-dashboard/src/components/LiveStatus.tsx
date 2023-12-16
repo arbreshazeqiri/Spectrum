@@ -16,7 +16,6 @@ const LiveStatus: FC<LiveStatusProps> = ({ isLive }) => {
 
       return () => clearInterval(intervalId);
     } else {
-      // If not live, clear the interval immediately
       setIsDotVisible(false);
     }
   }, [isLive]);

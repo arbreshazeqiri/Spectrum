@@ -37,6 +37,7 @@ const Dashboard: React.FC = () => {
   const [velocityData, setVelocityData] = useState<Data[]>([]);
   const [isLive, setIsLive] = useState(false);
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const fetchData = useCallback(async () => {
     try {
@@ -132,11 +133,14 @@ const Dashboard: React.FC = () => {
           setIsLive={() => setIsLive(!isLive)}
           status={sensorData.statusMessage}
           isAscending={sensorData.isAscending}
-          fetchData={fetchData}
+          fetchData={() => {
+            fetchData() 
+            setFirstLoad(false)
+          }}
         />
       </Flex>
       {isActionModalOpen && (
-        <ActionRequiredModal isOpen={isActionModalOpen} onClose={() => setIsActionModalOpen(false)} />
+        <ActionRequiredModal firstLoad={firstLoad} isOpen={isActionModalOpen} onClose={() => setIsActionModalOpen(false)} />
       )}
     </Flex>
   );
