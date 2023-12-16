@@ -1,0 +1,17 @@
+@font-face {
+    font-family: "Conthrax";
+    src: local("Conthrax"),
+    url("./fonts/Conthrax/Conthrax.otf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 0;
+  }
+  51%, 100% {
+    opacity: 1;
+  }
+}
+  
