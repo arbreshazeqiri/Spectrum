@@ -1,4 +1,4 @@
-# Spectrum Sensor Data Dashboard for the Ground Control Crew
+# Spectrum Sensor Data Dashboard for Ground Control Crew
 
 ## Overview
 
