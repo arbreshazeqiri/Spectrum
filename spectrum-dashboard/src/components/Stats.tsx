@@ -9,10 +9,11 @@ interface Data {
 
 interface StatsProps {
   data: Data[];
+  title: string;
   color: string;
 }
 
-const Stats: React.FC<StatsProps> = ({ data, color }) => (
+const Stats: React.FC<StatsProps> = ({ data, title, color }) => (
     <Flex flexDir="column" height="271px">
       <Flex
         bg="#2B3034"
@@ -22,7 +23,7 @@ const Stats: React.FC<StatsProps> = ({ data, color }) => (
         fontFamily={'Conthrax'}
         height="50px"
       >
-        Altitude
+        {title}
       </Flex>
       <LineGraph data={data} color={color} />
     </Flex>

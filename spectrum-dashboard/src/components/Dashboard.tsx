@@ -124,8 +124,8 @@ const Dashboard: React.FC = () => {
         gap={4}
       >
         <Flex flexDir="column" width="35%" gap={4}>
-          <Stats data={altitudeData} color="yellow" />
-          <Stats data={velocityData} color="#E29BFF" />
+          <Stats data={altitudeData} title={'Altitude'} color="yellow" />
+          <Stats data={velocityData} title={'Velocity'} color="#E29BFF" />
         </Flex>
         <Temperature temperature={sensorData.temperature} />
         <Info
